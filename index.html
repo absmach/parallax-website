@@ -4,9 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Parallax</title>
-  <meta name="description" content="Something new is coming for infrastructure teams." />
+  <meta name="description" content="Parallax simulates how distributed systems behave—before changes hit production." />
   <meta property="og:title" content="Parallax" />
-  <meta property="og:description" content="Something new is coming for infrastructure teams." />
+  <meta property="og:description" content="A world model for infrastructure." />
   <meta property="og:type" content="website" />
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -81,22 +81,13 @@
       width: 100%;
     }
 
-    .hero-eyebrow {
-      font-family: var(--mono);
-      font-size: 10px;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 36px;
-    }
-
     .hero-headline {
       font-size: clamp(36px, 7vw, 58px);
       font-weight: 300;
       line-height: 1.12;
       letter-spacing: -0.025em;
       color: var(--text);
-      margin-bottom: 32px;
+      margin-bottom: 28px;
     }
 
     .hero-subline {
@@ -104,15 +95,25 @@
       font-weight: 400;
       color: var(--accent);
       letter-spacing: 0.01em;
-      margin-bottom: 24px;
+      margin-bottom: 28px;
     }
 
     .hero-body {
       font-size: 15px;
       font-weight: 300;
-      color: #5a5a5a;
+      color: #787878;
       line-height: 1.7;
-      margin-bottom: 44px;
+      margin-bottom: 0;
+    }
+
+    .hero-kicker {
+      font-size: 15px;
+      font-weight: 300;
+      color: #787878;
+      line-height: 1.7;
+      margin-top: 20px;
+      margin-bottom: 48px;
+      font-style: italic;
     }
 
     /* ── form ── */
@@ -228,12 +229,12 @@
   <main>
     <section class="hero">
       <div class="wrap">
-        <p class="hero-eyebrow">Private beta</p>
         <h1 class="hero-headline">
           The outage you<br />haven't had yet.
         </h1>
         <p class="hero-subline">A world model for infrastructure.</p>
-        <p class="hero-body">We're building something new for infrastructure teams. If you want to be first, leave your email.</p>
+        <p class="hero-body">Parallax simulates how distributed systems behave—before changes hit production.</p>
+        <p class="hero-kicker">Prediction, not post-mortems.</p>
         <form class="cta-form" id="cta-form">
           <input
             class="cta-input"
@@ -242,9 +243,9 @@
             required
             aria-label="Email address"
           />
-          <button class="cta-btn" type="submit">Get early access</button>
+          <button class="cta-btn" type="submit">Request access</button>
         </form>
-        <p class="cta-note" id="cta-note">We'll reach out when we're ready for you.</p>
+        <p class="cta-note" id="cta-note">Private beta with selected infrastructure teams.</p>
         <p class="cta-success" id="cta-success">You're on the list.</p>
       </div>
     </section>
