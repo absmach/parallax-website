@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Parallax</title>
+  <meta name="description" content="Something new is coming for infrastructure teams." />
+  <meta property="og:title" content="Parallax" />
+  <meta property="og:description" content="Something new is coming for infrastructure teams." />
+  <meta property="og:type" content="website" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #0a0a0a;
+      --surface: #111111;
+      --border: #1e1e1e;
+      --text: #e8e8e8;
+      --muted: #4a4a4a;
+      --accent: #5eead4;
+      --accent-dim: #2d6a62;
+      --mono: 'JetBrains Mono', 'Courier New', monospace;
+      --sans: 'Inter', system-ui, sans-serif;
+    }
+
+    html {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 16px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .wrap {
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 0 28px;
+    }
+
+    /* ── nav ── */
+    nav {
+      padding: 36px 0 0;
+    }
+
+    .wordmark {
+      font-family: var(--mono);
+      font-size: 17px;
+      font-weight: 500;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--text);
+      text-decoration: none;
+      display: block;
+    }
+
+    /* ── hero ── */
+    main {
+      flex: 1;
+      display: flex;
+      align-items: center;
+    }
+
+    .hero {
+      padding: 80px 0 100px;
+      width: 100%;
+    }
+
+    .hero-eyebrow {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 36px;
+    }
+
+    .hero-headline {
+      font-size: clamp(36px, 7vw, 58px);
+      font-weight: 300;
+      line-height: 1.12;
+      letter-spacing: -0.025em;
+      color: var(--text);
+      margin-bottom: 32px;
+    }
+
+    .hero-subline {
+      font-size: 15px;
+      font-weight: 400;
+      color: var(--accent);
+      letter-spacing: 0.01em;
+      margin-bottom: 24px;
+    }
+
+    .hero-body {
+      font-size: 15px;
+      font-weight: 300;
+      color: #5a5a5a;
+      line-height: 1.7;
+      margin-bottom: 44px;
+    }
+
+    /* ── form ── */
+    .cta-form {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
+    .cta-input {
+      flex: 1;
+      min-width: 200px;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      padding: 11px 15px;
+      font-family: var(--sans);
+      font-size: 14px;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.15s;
+    }
+
+    .cta-input::placeholder {
+      color: var(--muted);
+    }
+
+    .cta-input:focus {
+      border-color: var(--accent-dim);
+    }
+
+    .cta-btn {
+      background: var(--accent);
+      color: #0a0a0a;
+      border: none;
+      border-radius: 5px;
+      padding: 11px 20px;
+      font-family: var(--sans);
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: opacity 0.15s;
+    }
+
+    .cta-btn:hover {
+      opacity: 0.8;
+    }
+
+    .cta-note {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .cta-success {
+      display: none;
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--accent);
+      letter-spacing: 0.05em;
+    }
+
+    /* ── footer ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 24px 0;
+    }
+
+    footer .wrap {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .footer-copy {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .footer-contact {
+      font-size: 12px;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+
+    .footer-contact:hover {
+      color: var(--text);
+    }
+
+    @media (max-width: 480px) {
+      .hero-headline {
+        font-size: 34px;
+      }
+
+      footer .wrap {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="wrap">
+      <a class="wordmark" href="/">Parallax</a>
+    </div>
+  </nav>
+
+  <main>
+    <section class="hero">
+      <div class="wrap">
+        <p class="hero-eyebrow">Private beta</p>
+        <h1 class="hero-headline">
+          The outage you<br />haven't had yet.
+        </h1>
+        <p class="hero-subline">A world model for infrastructure.</p>
+        <p class="hero-body">We're building something new for infrastructure teams. If you want to be first, leave your email.</p>
+        <form class="cta-form" id="cta-form">
+          <input
+            class="cta-input"
+            type="email"
+            placeholder="you@yourco.com"
+            required
+            aria-label="Email address"
+          />
+          <button class="cta-btn" type="submit">Get early access</button>
+        </form>
+        <p class="cta-note" id="cta-note">We'll reach out when we're ready for you.</p>
+        <p class="cta-success" id="cta-success">You're on the list.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <span class="footer-copy">© 2026 Parallax</span>
+      <a class="footer-contact" href="mailto:hello@parallax.dev">hello@parallax.dev</a>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('cta-form').addEventListener('submit', function (e) {
+      e.preventDefault();
+      this.style.display = 'none';
+      document.getElementById('cta-note').style.display = 'none';
+      document.getElementById('cta-success').style.display = 'block';
+    });
+  </script>
+
+</body>
+</html>
