@@ -1,0 +1,18 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "parallax-website",
+  "account_id": "058225ae7b31fdf8131858ff8b8fd924",
+  "compatibility_date": "2026-07-22",
+  "assets": {
+    "directory": "./"
+  },
+  "routes": [
+    {
+      "pattern": "prlx.world",
+      "custom_domain": true
+    }
+  ],
+  "observability": {
+    "enabled": true
+  }
+}
