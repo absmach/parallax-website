@@ -3,9 +3,18 @@
   "name": "parallax-website",
   "account_id": "058225ae7b31fdf8131858ff8b8fd924",
   "compatibility_date": "2026-07-22",
+  "main": "src/worker.js",
   "assets": {
     "directory": "./"
   },
+  "vars": {
+    "LISTMONK_URL": "https://mailer.absmach.eu",
+    "LISTMONK_LIST_UUID": "fbd66307-464a-4899-a923-bb9ed7c6e715",
+    "LISTMONK_TX_API_USER": "website-tx",
+    "LISTMONK_WELCOME_TEMPLATE_ID": "5"
+  },
+  // LISTMONK_TX_API_TOKEN is a secret: set locally in .dev.vars, and in prod via
+  // `wrangler secret put LISTMONK_TX_API_TOKEN`.
   "routes": [
     {
       "pattern": "prlx.world",

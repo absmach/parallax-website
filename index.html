@@ -198,6 +198,22 @@
       letter-spacing: 0.05em;
     }
 
+    .cta-error {
+      display: none;
+      font-family: var(--mono);
+      font-size: 12px;
+      color: #e07a7a;
+      letter-spacing: 0.05em;
+    }
+
+    .cta-hp {
+      position: absolute;
+      left: -9999px;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+    }
+
     /* ── ticker ── */
     .ticker {
       margin-top: 22px;
@@ -297,11 +313,14 @@
         <p class="hero-body">Parallax simulates how distributed systems behave—before changes hit production.</p>
         <p class="hero-kicker">Prediction, not post-mortems.</p>
         <form class="cta-form" id="cta-form">
-          <input class="cta-input" type="email" placeholder="you@yourco.com" required aria-label="Email address" />
+          <input class="cta-input" type="email" name="email" placeholder="you@yourco.com" required
+            aria-label="Email address" />
+          <input class="cta-hp" type="text" name="company" tabindex="-1" autocomplete="off" aria-hidden="true" />
           <button class="cta-btn" type="submit">Request access</button>
         </form>
         <p class="cta-note" id="cta-note">Private beta with selected infrastructure teams.</p>
         <p class="cta-success" id="cta-success">You're on the list.</p>
+        <p class="cta-error" id="cta-error"></p>
         <p class="ticker" id="ticker" aria-hidden="true"></p>
       </div>
     </section>
@@ -317,9 +336,41 @@
   <script>
     document.getElementById('cta-form').addEventListener('submit', function (e) {
       e.preventDefault();
-      this.style.display = 'none';
-      document.getElementById('cta-note').style.display = 'none';
-      document.getElementById('cta-success').style.display = 'block';
+      var form = this;
+      var errorEl = document.getElementById('cta-error');
+      var submitBtn = form.querySelector('.cta-btn');
+      errorEl.style.display = 'none';
+
+      var email = form.email.value.trim();
+      var company = form.company.value;
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Submitting…';
+
+      fetch('/api/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email, company: company })
+      })
+        .then(function (res) {
+          return res.json().then(function (data) {
+            return { ok: res.ok, data: data };
+          });
+        })
+        .then(function (result) {
+          if (!result.ok) {
+            throw new Error((result.data && result.data.error) || 'Something went wrong.');
+          }
+          form.style.display = 'none';
+          document.getElementById('cta-note').style.display = 'none';
+          document.getElementById('cta-success').style.display = 'block';
+        })
+        .catch(function (err) {
+          errorEl.textContent = err.message || 'Something went wrong. Please try again.';
+          errorEl.style.display = 'block';
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Request access';
+        });
     });
   </script>
 
