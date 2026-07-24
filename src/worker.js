@@ -78,6 +78,7 @@ async function sendWelcomeEmail(email, env) {
       body: JSON.stringify({
         subscriber_email: email,
         template_id: Number(env.LISTMONK_WELCOME_TEMPLATE_ID),
+        from_email: env.LISTMONK_FROM_EMAIL,
       }),
     });
     if (!res.ok) {
