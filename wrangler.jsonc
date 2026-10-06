@@ -5,7 +5,8 @@
   "compatibility_date": "2026-07-22",
   "main": "src/worker.js",
   "assets": {
-    "directory": "./"
+    "directory": "./",
+    "binding": "ASSETS"
   },
   "vars": {
     "LISTMONK_URL": "https://mailer.absmach.eu",
