@@ -5,15 +5,18 @@
   "compatibility_date": "2026-07-22",
   "main": "src/worker.js",
   "assets": {
-    "directory": "./"
+    "directory": "./",
+    "binding": "ASSETS"
   },
   "vars": {
     "LISTMONK_URL": "https://mailer.absmach.eu",
-    "LISTMONK_LIST_UUID": "fbd66307-464a-4899-a923-bb9ed7c6e715",
+    "LISTMONK_LIST_ID": "3",
     "LISTMONK_TX_API_USER": "website-tx",
     "LISTMONK_WELCOME_TEMPLATE_ID": "5",
-    "LISTMONK_FROM_EMAIL": "Parallax <hello@prlx.world>"
+    "LISTMONK_FROM_EMAIL": "Parallax <hello@prlx.world>",
+    "TURNSTILE_HOSTNAMES": "prlx.world"
   },
+  // TURNSTILE_SECRET is also a secret (`wrangler secret put TURNSTILE_SECRET`).
   // LISTMONK_TX_API_TOKEN is a secret: set locally in .dev.vars, and in prod via
   // `wrangler secret put LISTMONK_TX_API_TOKEN`.
   "routes": [

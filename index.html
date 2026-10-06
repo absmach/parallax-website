@@ -206,6 +206,16 @@
       letter-spacing: 0.05em;
     }
 
+    /* Empty until Cloudflare actually shows a challenge (interaction-only). */
+    .cta-turnstile {
+      flex-basis: 100%;
+    }
+
+    .cta-turnstile:not(:empty) {
+      margin-top: 4px;
+      margin-bottom: 14px;
+    }
+
     .cta-hp {
       position: absolute;
       left: -9999px;
@@ -312,11 +322,12 @@
         <p class="hero-subline">A world model for infrastructure.</p>
         <p class="hero-body">Parallax simulates how distributed systems behave—before changes hit production.</p>
         <p class="hero-kicker">Prediction, not post-mortems.</p>
-        <form class="cta-form" id="cta-form">
+        <form class="cta-form" id="cta-form" data-sitekey="0x4AAAAAAFPeBdUCL1rPC2TDjqG4UNlY1G0">
           <input class="cta-input" type="email" name="email" placeholder="you@yourco.com" required
             aria-label="Email address" />
           <input class="cta-hp" type="text" name="company" tabindex="-1" autocomplete="off" aria-hidden="true" />
           <button class="cta-btn" type="submit">Request access</button>
+          <div class="cta-turnstile" id="cta-turnstile"></div>
         </form>
         <p class="cta-note" id="cta-note">Private beta with selected infrastructure teams.</p>
         <p class="cta-success" id="cta-success">You're on the list.</p>
@@ -334,44 +345,108 @@
   </footer>
 
   <script>
-    document.getElementById('cta-form').addEventListener('submit', function (e) {
-      e.preventDefault();
-      var form = this;
-      var errorEl = document.getElementById('cta-error');
-      var submitBtn = form.querySelector('.cta-btn');
-      errorEl.style.display = 'none';
+    (function () {
+      var form = document.getElementById('cta-form');
+      var container = document.getElementById('cta-turnstile');
+      var sitekey = form.getAttribute('data-sitekey') || '';
+      var widgetId;
+      var token = '';
+      var waiter = null;
 
-      var email = form.email.value.trim();
-      var company = form.company.value;
+      function setToken(t) {
+        token = t;
+        if (t && waiter) { waiter(t); waiter = null; }
+      }
 
-      submitBtn.disabled = true;
-      submitBtn.textContent = 'Submitting…';
+      // A widget error means no token is coming, so stop waiting right away.
+      function onWidgetError() {
+        token = '';
+        if (waiter) { waiter(''); waiter = null; }
+      }
 
-      fetch('/api/subscribe', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: email, company: company })
-      })
-        .then(function (res) {
-          return res.json().then(function (data) {
-            return { ok: res.ok, data: data };
+      // Load Turnstile lazily, only once someone starts using the form.
+      var loading = false;
+      function loadTurnstile() {
+        if (loading || !sitekey) return;
+        loading = true;
+        var script = document.createElement('script');
+        script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
+        script.async = true;
+        script.addEventListener('load', function () {
+          widgetId = window.turnstile.render(container, {
+            sitekey: sitekey,
+            action: 'waitlist_signup',
+            appearance: 'interaction-only',
+            callback: setToken,
+            'expired-callback': function () { setToken(''); },
+            'error-callback': onWidgetError
           });
-        })
-        .then(function (result) {
-          if (!result.ok) {
-            throw new Error((result.data && result.data.error) || 'Something went wrong.');
-          }
-          form.style.display = 'none';
-          document.getElementById('cta-note').style.display = 'none';
-          document.getElementById('cta-success').style.display = 'block';
-        })
-        .catch(function (err) {
-          errorEl.textContent = err.message || 'Something went wrong. Please try again.';
-          errorEl.style.display = 'block';
-          submitBtn.disabled = false;
-          submitBtn.textContent = 'Request access';
+        }, { once: true });
+        document.head.appendChild(script);
+      }
+      form.addEventListener('focusin', loadTurnstile, { once: true });
+
+      function waitForToken(ms) {
+        if (token) return Promise.resolve(token);
+        return new Promise(function (resolve) {
+          var me = resolve;
+          waiter = me;
+          setTimeout(function () {
+            if (waiter === me) { waiter = null; resolve(''); }
+          }, ms);
         });
-    });
+      }
+
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var errorEl = document.getElementById('cta-error');
+        var submitBtn = form.querySelector('.cta-btn');
+        errorEl.style.display = 'none';
+
+        var email = form.email.value.trim();
+        var company = form.company.value;
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Submitting…';
+
+        loadTurnstile();
+        waitForToken(15000)
+          .then(function (turnstileToken) {
+            if (!turnstileToken) {
+              throw new Error('Verification failed. Please reload and try again.');
+            }
+            return fetch('/api/subscribe', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ email: email, company: company, turnstileToken: turnstileToken })
+            });
+          })
+          .then(function (res) {
+            return res.json().then(function (data) {
+              return { ok: res.ok, data: data };
+            });
+          })
+          .then(function (result) {
+            if (!result.ok) {
+              throw new Error((result.data && result.data.error) || 'Something went wrong.');
+            }
+            form.style.display = 'none';
+            document.getElementById('cta-note').style.display = 'none';
+            document.getElementById('cta-success').style.display = 'block';
+          })
+          .catch(function (err) {
+            errorEl.textContent = err.message || 'Something went wrong. Please try again.';
+            errorEl.style.display = 'block';
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Request access';
+          })
+          .then(function () {
+            // Tokens are single-use; get a fresh one before any retry.
+            token = '';
+            if (widgetId !== undefined && window.turnstile) window.turnstile.reset(widgetId);
+          });
+      });
+    })();
   </script>
 
   <script>
